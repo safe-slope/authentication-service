@@ -7,13 +7,13 @@ import org.mapstruct.Mapper;
 import java.util.List;
 
 @Mapper(componentModel = "spring")
-public interface TenantMapper {
-    
-    TenantDto toDto(Tenant entity);
+public abstract class TenantMapper {
 
-    List<TenantDto> toDtoList(List<Tenant> entities);
+    public abstract TenantDto toDto(Tenant entity);
 
-    Tenant toEntity(TenantDto dto);
+    public abstract List<TenantDto> toDtoList(List<Tenant> entities);
 
-    List<Tenant> toEntityList(List<TenantDto> dtos);
+    public abstract Tenant toEntity(TenantDto dto);
+
+    public abstract List<Tenant> toEntityList(List<TenantDto> dtos);
 }

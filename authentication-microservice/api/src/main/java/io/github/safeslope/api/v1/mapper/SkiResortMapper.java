@@ -14,7 +14,6 @@ import java.util.List;
 
 @Mapper(componentModel = "spring")
 public abstract class SkiResortMapper {
-    @Autowired
     protected TenantService tenantService;
 
     @Mapping(target = "tenantId", source = "tenant.id")

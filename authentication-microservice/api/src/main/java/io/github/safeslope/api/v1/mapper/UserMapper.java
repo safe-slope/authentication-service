@@ -14,7 +14,6 @@ import java.util.List;
 
 @Mapper(componentModel = "spring")
 public abstract class UserMapper {
-    @Autowired
     protected TenantService tenantService;
 
     @Mapping(target = "role", expression = "java(entity.getRole() != null ? entity.getRole().name() : null)")
