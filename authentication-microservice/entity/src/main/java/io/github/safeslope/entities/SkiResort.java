@@ -12,7 +12,7 @@ import lombok.*;
 @Builder
 public class SkiResort {
     @Id
-    // Without generation type, as id will be specified from the lock microservice
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @Column(name = "name")
