@@ -26,8 +26,11 @@ public class SkiResortService {
     }
 
     public SkiResort getByName(String name) {
-        // FIXME potrebna je implementacija izjeme (kot pri get)
-        return skiResortRepository.findByName(name);
+        SkiResort resort = skiResortRepository.findByName(name);
+        if (resort == null) {
+            throw new SkiResortNotFoundException(name);
+        }
+        return resort;
     }
 
     public SkiResort create(SkiResort resort) {
