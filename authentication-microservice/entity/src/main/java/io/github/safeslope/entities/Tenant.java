@@ -21,10 +21,6 @@ public class Tenant {
     @Column(name = "name")
     private String name;
 
-    @OneToMany(mappedBy = "ski_resort", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JsonManagedReference
-    private List<SkiResort> skiResorts;
-
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonManagedReference
     private List<User> users;
