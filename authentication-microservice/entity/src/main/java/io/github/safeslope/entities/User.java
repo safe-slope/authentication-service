@@ -22,8 +22,15 @@ public class User {
     @Column(name = "password")
     private String password;
 
+    @Enumerated(EnumType.STRING)
+    private Role role;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "tenant_id")
     @JsonBackReference
     private Tenant tenant;
+
+    public enum Role {
+        SUPER_ADMIN, ADMIN, USER
+    }
 }
