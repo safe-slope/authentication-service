@@ -12,6 +12,7 @@
         <module>api</module>
         <module>entity</module>
         <module>service</module>
+        <module>security</module>
     </modules>
 
     <properties>
@@ -72,6 +73,12 @@
             <dependency>
                 <groupId>io.github.safeslope</groupId>
                 <artifactId>api</artifactId>
+                <version>${project.version}</version>
+                <scope>compile</scope>
+            </dependency>
+            <dependency>
+                <groupId>io.github.safeslope</groupId>
+                <artifactId>security</artifactId>
                 <version>${project.version}</version>
                 <scope>compile</scope>
             </dependency>
