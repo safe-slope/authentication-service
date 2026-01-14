@@ -39,6 +39,9 @@ public class TenantService {
     }
 
     public void delete(Integer id) {
+        if (!tenantRepository.existsById(id)) {
+            throw new TenantNotFoundException(id);
+        }
         tenantRepository.deleteById(id);
     }
 }
