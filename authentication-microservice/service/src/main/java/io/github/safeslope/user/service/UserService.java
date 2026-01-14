@@ -3,6 +3,7 @@ package io.github.safeslope.user.service;
 import io.github.safeslope.entities.User;
 import io.github.safeslope.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,9 +13,11 @@ import java.util.List;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public List<User> getAll() {
@@ -35,6 +38,7 @@ public class UserService {
     }
 
     public User create(User user) {
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
 
@@ -43,7 +47,7 @@ public class UserService {
                 .orElseThrow(() -> new UserNotFoundException(id));
 
         existing.setUsername(updated.getUsername());
-        existing.setPassword(updated.getPassword());
+        existing.setPassword(passwordEncoder.encode(updated.getPassword()));
         existing.setRole(updated.getRole());
         existing.setTenant(updated.getTenant());
         return userRepository.save(existing);
