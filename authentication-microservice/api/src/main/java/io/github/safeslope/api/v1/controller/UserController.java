@@ -34,6 +34,7 @@ public class UserController {
     }
 
     @GetMapping("/username/{username}")
+    @PreAuthorize("isAuthenticated()")
     public UserDto getByUsername(@PathVariable String username) {
         return userMapper.toDto(userService.getByUsername(username));
     }
