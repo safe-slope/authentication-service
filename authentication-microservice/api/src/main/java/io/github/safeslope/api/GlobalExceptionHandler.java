@@ -2,9 +2,7 @@ package io.github.safeslope.api;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -24,12 +22,8 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(400).body(ex.getMessage());
     }
 
-    @ExceptionHandler({
-            UsernameNotFoundException.class,
-            BadCredentialsException.class,
-            AuthenticationException.class
-    })
-    public ResponseEntity<String> handleAuthenticationException(Exception ex) {
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<String> handleAuthenticationException(AuthenticationException ex) {
         return ResponseEntity.status(401).body("Authentication failed: " + ex.getMessage());
     }
 
