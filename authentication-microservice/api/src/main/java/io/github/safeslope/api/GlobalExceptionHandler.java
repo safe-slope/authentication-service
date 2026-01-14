@@ -34,6 +34,9 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> handleGenericException(Exception ex) {
-        return ResponseEntity.status(500).body("Internal server error: " + ex.getMessage());
+        // Log the full exception details for debugging
+        // Note: In production, use proper logging framework
+        System.err.println("Unhandled exception: " + ex.getClass().getName() + ": " + ex.getMessage());
+        return ResponseEntity.status(500).body("Internal server error occurred");
     }
 }
