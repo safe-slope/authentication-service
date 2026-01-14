@@ -31,7 +31,8 @@ class UserServiceTest {
 
     private User testUser;
     private static final String RAW_PASSWORD = "plainPassword123";
-    private static final String ENCODED_PASSWORD = "$2a$10$encodedPasswordHash";
+    // Valid BCrypt hash for "password" with cost 10
+    private static final String ENCODED_PASSWORD = "$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy";
 
     @BeforeEach
     void setUp() {
@@ -152,10 +153,12 @@ class UserServiceTest {
     @Test
     void update_shouldNotEncodeAlreadyEncodedPassword() {
         // Arrange
+        // Valid BCrypt hash for "oldpassword" with cost 10
+        String oldEncodedPassword = "$2a$10$e0MYzXyjpJS7Pd0RVvHwHe1hjrYcwdNPZcoazSsNjOhZMBBaibeRi";
         User existingUser = User.builder()
                 .id(1)
                 .username("testuser")
-                .password("$2a$10$oldEncodedPasswordHash")
+                .password(oldEncodedPassword)
                 .role(User.Role.USER)
                 .build();
 

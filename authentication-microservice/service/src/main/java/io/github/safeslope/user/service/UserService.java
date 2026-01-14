@@ -17,7 +17,8 @@ public class UserService {
     
     // BCrypt format pattern: $2[a|b|y]$[cost]$[22 character salt][31 character hash]
     // Cost parameter can be 1-2 digits (range 04-31)
-    private static final String BCRYPT_PATTERN = "^\\$2[aby]\\$\\d{1,2}\\$.{53}$";
+    // Salt and hash use BCrypt's base64 encoding: [./A-Za-z0-9]
+    private static final String BCRYPT_PATTERN = "^\\$2[aby]\\$\\d{1,2}\\$[./A-Za-z0-9]{53}$";
 
     public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
