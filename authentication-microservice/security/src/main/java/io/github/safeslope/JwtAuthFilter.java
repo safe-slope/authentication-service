@@ -38,7 +38,11 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             token = authHeader.substring(7);
-            userId = jwtService.extractUserId(token);
+            try {
+                userId = jwtService.extractUserId(token);
+            } catch (Exception e) {
+                // Malformed token, skip authentication
+            }
         }
 
         if (userId != null && SecurityContextHolder.getContext().getAuthentication() == null) {
@@ -52,8 +56,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                     authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                     SecurityContextHolder.getContext().setAuthentication(authToken);
                 }
-            } catch (NumberFormatException e) {
-                // Invalid userId format in token, skip authentication
+            } catch (RuntimeException e) {
+                // Invalid userId format or user not found, skip authentication
             }
         }
         filterChain.doFilter(request, response);

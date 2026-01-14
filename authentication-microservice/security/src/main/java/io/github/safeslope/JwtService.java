@@ -85,7 +85,12 @@ public class JwtService {
     }
 
     public Boolean validateToken(String token, User user) {
-        final String userId = extractUserId(token);
-        return (userId.equals(String.valueOf(user.getId())) && !isTokenExpired(token));
+        try {
+            final String userId = extractUserId(token);
+            return (userId.equals(String.valueOf(user.getId())) && !isTokenExpired(token));
+        } catch (Exception e) {
+            // Token parsing failed or is malformed
+            return false;
+        }
     }
 }
