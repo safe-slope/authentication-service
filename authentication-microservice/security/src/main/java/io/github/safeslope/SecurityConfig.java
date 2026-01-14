@@ -2,6 +2,7 @@ package io.github.safeslope;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -47,7 +48,9 @@ public class SecurityConfig {
                         .requestMatchers("/api/v1/auth/login").permitAll()
 
                         // Role-based endpoints
-                        .requestMatchers("/api/v1/users**").hasAuthority("SUPER_ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/v1/users/").hasRole("SUPER_ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/v1/users/").hasAnyRole("SUPER_ADMIN", "ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/v1/users/{id}").hasAnyRole("SUPER_ADMIN")
                         .requestMatchers("/api/v1/tenants**").hasAuthority("SUPER_ADMIN")
 
                         // All other endpoints require authentication
