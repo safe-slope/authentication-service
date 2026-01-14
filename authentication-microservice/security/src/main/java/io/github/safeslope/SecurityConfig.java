@@ -51,6 +51,8 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/v1/users/").hasRole("SUPER_ADMIN")
                         .requestMatchers(HttpMethod.POST, "/api/v1/users/").hasAnyRole("SUPER_ADMIN", "ADMIN")
                         .requestMatchers(HttpMethod.GET, "/api/v1/users/{id}").hasAnyRole("SUPER_ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/v1/users/{id}").hasAnyRole("SUPER_ADMIN", "ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/v1/users/{id}").hasRole("SUPER_ADMIN")
                         .requestMatchers("/api/v1/tenants**").hasAuthority("SUPER_ADMIN")
 
                         // All other endpoints require authentication
