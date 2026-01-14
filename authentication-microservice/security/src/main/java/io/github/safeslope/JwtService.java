@@ -53,7 +53,14 @@ public class JwtService {
         if (tenantId == null) {
             return null;
         }
-        return tenantId instanceof Integer ? (Integer) tenantId : Integer.valueOf(tenantId.toString());
+        if (tenantId instanceof Integer) {
+            return (Integer) tenantId;
+        }
+        try {
+            return Integer.valueOf(tenantId.toString());
+        } catch (NumberFormatException e) {
+            return null;
+        }
     }
 
     public Date extractExpiration(String token) {

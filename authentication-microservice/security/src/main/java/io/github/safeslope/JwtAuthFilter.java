@@ -42,14 +42,18 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         }
 
         if (userId != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            User user = userService.get(Integer.valueOf(userId));
-            if (jwtService.validateToken(token, user)) {
-                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                        user,
-                        null,
-                        List.of(() -> "ROLE_" + user.getRole().name()));
-                authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                SecurityContextHolder.getContext().setAuthentication(authToken);
+            try {
+                User user = userService.get(Integer.valueOf(userId));
+                if (jwtService.validateToken(token, user)) {
+                    UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+                            user,
+                            null,
+                            List.of(() -> "ROLE_" + user.getRole().name()));
+                    authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                    SecurityContextHolder.getContext().setAuthentication(authToken);
+                }
+            } catch (NumberFormatException e) {
+                // Invalid userId format in token, skip authentication
             }
         }
         filterChain.doFilter(request, response);
