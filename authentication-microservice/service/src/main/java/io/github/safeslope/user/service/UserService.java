@@ -38,6 +38,9 @@ public class UserService {
     }
 
     public User create(User user) {
+        if (user.getPassword() == null || user.getPassword().isEmpty()) {
+            throw new IllegalArgumentException("Password cannot be null or empty");
+        }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
@@ -49,8 +52,9 @@ public class UserService {
         existing.setUsername(updated.getUsername());
         // Only encode and update password if it's provided and not already encoded
         if (updated.getPassword() != null && !updated.getPassword().isEmpty()) {
-            // Check if password is already encoded (BCrypt hashes start with $2a$, $2b$, or $2y$)
-            if (!updated.getPassword().startsWith("$2")) {
+            // Check if password is already encoded using BCrypt format pattern
+            // BCrypt format: $2[a|b|y]$[cost]$[22 character salt][31 character hash]
+            if (!updated.getPassword().matches("^\\$2[aby]\\$\\d{2}\\$.{53}$")) {
                 existing.setPassword(passwordEncoder.encode(updated.getPassword()));
             } else {
                 existing.setPassword(updated.getPassword());

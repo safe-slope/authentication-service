@@ -60,6 +60,36 @@ class UserServiceTest {
     }
 
     @Test
+    void create_shouldThrowExceptionWhenPasswordIsNull() {
+        // Arrange
+        User userWithNullPassword = User.builder()
+                .username("testuser")
+                .password(null)
+                .role(User.Role.USER)
+                .build();
+
+        // Act & Assert
+        assertThrows(IllegalArgumentException.class, () -> userService.create(userWithNullPassword));
+        verify(passwordEncoder, never()).encode(any());
+        verify(userRepository, never()).save(any());
+    }
+
+    @Test
+    void create_shouldThrowExceptionWhenPasswordIsEmpty() {
+        // Arrange
+        User userWithEmptyPassword = User.builder()
+                .username("testuser")
+                .password("")
+                .role(User.Role.USER)
+                .build();
+
+        // Act & Assert
+        assertThrows(IllegalArgumentException.class, () -> userService.create(userWithEmptyPassword));
+        verify(passwordEncoder, never()).encode(any());
+        verify(userRepository, never()).save(any());
+    }
+
+    @Test
     void update_shouldEncodePasswordBeforeSaving() {
         // Arrange
         User updatedUser = User.builder()
