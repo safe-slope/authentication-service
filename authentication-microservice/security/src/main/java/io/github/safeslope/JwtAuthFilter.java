@@ -3,6 +3,8 @@ package io.github.safeslope;
 
 import io.github.safeslope.entities.User;
 import io.github.safeslope.user.service.UserService;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -10,6 +12,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 
@@ -23,46 +26,44 @@ import java.util.List;
 @Component
 public class JwtAuthFilter extends OncePerRequestFilter {
 
-    private final UserService userService;
     private final JwtService jwtService;
 
     @Autowired
-    public JwtAuthFilter(UserService userService, JwtService jwtService) {
-        this.userService = userService;
+    public JwtAuthFilter(JwtService jwtService) {
         this.jwtService = jwtService;
     }
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain) throws ServletException, IOException {
-        String authHeader = request.getHeader("Authorization");
-        String token = null;
-        String userId = null;
+    protected void doFilterInternal(
+            HttpServletRequest request,
+            @NonNull HttpServletResponse response,
+            @NonNull FilterChain chain
+    ) throws ServletException, IOException {
+        String header = request.getHeader("Authorization");
 
-        if (authHeader != null && authHeader.startsWith("Bearer ")) {
-            token = authHeader.substring(7);
-            try {
-                userId = jwtService.extractUserId(token);
-            } catch (Exception e) {
-                // Malformed token, skip authentication
-            }
+        if (header == null || !header.startsWith("Bearer ")) {
+            chain.doFilter(request, response);
+            return;
         }
 
-        if (userId != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            try {
-                User user = userService.get(Integer.valueOf(userId));
-                if (jwtService.validateToken(token, user)) {
-                    UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                            user,
-                            null,
-                            List.of(new SimpleGrantedAuthority(user.getRole().name()))
-                    );
-                    authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                    SecurityContextHolder.getContext().setAuthentication(authToken);
-                }
-            } catch (RuntimeException e) {
-                // Invalid userId format or user not found, skip authentication
-            }
+        try {
+            String userId = jwtService.extractUserId(header.substring(7));
+            Integer tenantId = jwtService.extractTenantId(header.substring(7));
+            String role= jwtService.extractRole(header.substring(7));
+
+            var authorities = List.of(new SimpleGrantedAuthority("ROLE_" + role));
+
+            Authentication auth = new UsernamePasswordAuthenticationToken(userId, null, authorities);
+
+            auth.setDetails(tenantId);
+
+            SecurityContextHolder.getContext().setAuthentication(auth);
+
+        } catch (JwtException e) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            return;
         }
-        filterChain.doFilter(request, response);
+
+        chain.doFilter(request, response);
     }
 }

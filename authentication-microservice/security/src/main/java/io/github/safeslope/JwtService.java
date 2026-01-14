@@ -24,6 +24,9 @@ public class JwtService {
         if (user.getTenant() != null) {
             claims.put("tenantId", user.getTenant().getId());
         }
+        if (user.getRole() != null) {
+            claims.put("role", user.getRole().name());
+        }
         return createToken(claims, String.valueOf(user.getId()));
     }
 
@@ -61,6 +64,15 @@ public class JwtService {
         }
     }
 
+    public String extractRole(String token) {
+        Claims claims = extractAllClaims(token);
+        Object role = claims.get("role");
+        if (role == null) {
+            return null;
+        }
+        return role.toString();
+    }
+
     public Date extractExpiration(String token) {
         return extractClaim(token, Claims::getExpiration);
     }
@@ -70,7 +82,7 @@ public class JwtService {
         return claimsResolver.apply(claims);
     }
 
-    private Claims extractAllClaims(String token) {
+    public Claims extractAllClaims(String token) {
         return Jwts.parser()
                 .setSigningKey(getSignKey())
                 .build()
