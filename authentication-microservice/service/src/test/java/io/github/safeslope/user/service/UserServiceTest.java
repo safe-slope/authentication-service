@@ -118,4 +118,91 @@ class UserServiceTest {
         verify(userRepository).save(userCaptor.capture());
         assertNotEquals(RAW_PASSWORD, userCaptor.getValue().getPassword());
     }
+
+    @Test
+    void update_shouldNotEncodeAlreadyEncodedPassword() {
+        // Arrange
+        User existingUser = User.builder()
+                .id(1)
+                .username("testuser")
+                .password("$2a$10$oldEncodedPasswordHash")
+                .role(User.Role.USER)
+                .build();
+
+        User updatedUser = User.builder()
+                .username("testuser")
+                .password(ENCODED_PASSWORD)
+                .role(User.Role.ADMIN)
+                .build();
+        
+        when(userRepository.findById(1)).thenReturn(Optional.of(existingUser));
+        when(userRepository.save(any(User.class))).thenReturn(existingUser);
+
+        // Act
+        userService.update(1, updatedUser);
+
+        // Assert
+        verify(passwordEncoder, never()).encode(ENCODED_PASSWORD);
+        ArgumentCaptor<User> userCaptor = ArgumentCaptor.forClass(User.class);
+        verify(userRepository).save(userCaptor.capture());
+        assertEquals(ENCODED_PASSWORD, userCaptor.getValue().getPassword());
+    }
+
+    @Test
+    void update_shouldNotChangePasswordWhenNullProvided() {
+        // Arrange
+        User existingUser = User.builder()
+                .id(1)
+                .username("testuser")
+                .password(ENCODED_PASSWORD)
+                .role(User.Role.USER)
+                .build();
+
+        User updatedUser = User.builder()
+                .username("newusername")
+                .password(null)
+                .role(User.Role.ADMIN)
+                .build();
+        
+        when(userRepository.findById(1)).thenReturn(Optional.of(existingUser));
+        when(userRepository.save(any(User.class))).thenReturn(existingUser);
+
+        // Act
+        userService.update(1, updatedUser);
+
+        // Assert
+        verify(passwordEncoder, never()).encode(any());
+        ArgumentCaptor<User> userCaptor = ArgumentCaptor.forClass(User.class);
+        verify(userRepository).save(userCaptor.capture());
+        assertEquals(ENCODED_PASSWORD, userCaptor.getValue().getPassword());
+    }
+
+    @Test
+    void update_shouldNotChangePasswordWhenEmptyStringProvided() {
+        // Arrange
+        User existingUser = User.builder()
+                .id(1)
+                .username("testuser")
+                .password(ENCODED_PASSWORD)
+                .role(User.Role.USER)
+                .build();
+
+        User updatedUser = User.builder()
+                .username("newusername")
+                .password("")
+                .role(User.Role.ADMIN)
+                .build();
+        
+        when(userRepository.findById(1)).thenReturn(Optional.of(existingUser));
+        when(userRepository.save(any(User.class))).thenReturn(existingUser);
+
+        // Act
+        userService.update(1, updatedUser);
+
+        // Assert
+        verify(passwordEncoder, never()).encode(any());
+        ArgumentCaptor<User> userCaptor = ArgumentCaptor.forClass(User.class);
+        verify(userRepository).save(userCaptor.capture());
+        assertEquals(ENCODED_PASSWORD, userCaptor.getValue().getPassword());
+    }
 }

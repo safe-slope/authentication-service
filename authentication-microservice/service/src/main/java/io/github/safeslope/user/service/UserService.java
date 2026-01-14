@@ -47,7 +47,15 @@ public class UserService {
                 .orElseThrow(() -> new UserNotFoundException(id));
 
         existing.setUsername(updated.getUsername());
-        existing.setPassword(passwordEncoder.encode(updated.getPassword()));
+        // Only encode and update password if it's provided and not already encoded
+        if (updated.getPassword() != null && !updated.getPassword().isEmpty()) {
+            // Check if password is already encoded (BCrypt hashes start with $2a$, $2b$, or $2y$)
+            if (!updated.getPassword().startsWith("$2")) {
+                existing.setPassword(passwordEncoder.encode(updated.getPassword()));
+            } else {
+                existing.setPassword(updated.getPassword());
+            }
+        }
         existing.setRole(updated.getRole());
         existing.setTenant(updated.getTenant());
         return userRepository.save(existing);
