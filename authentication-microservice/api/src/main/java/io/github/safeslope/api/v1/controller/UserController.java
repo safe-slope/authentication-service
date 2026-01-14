@@ -4,6 +4,7 @@ import io.github.safeslope.api.v1.dto.UserDto;
 import io.github.safeslope.api.v1.mapper.UserMapper;
 import io.github.safeslope.user.service.UserService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,31 +22,37 @@ public class UserController {
     }
 
     @GetMapping
+    @PreAuthorize("hasRole('SUPER_ADMIN')")
     public List<UserDto> list() {
         return userMapper.toDtoList(userService.getAll());
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasRole('SUPER_ADMIN')")
     public UserDto get(@PathVariable Integer id) {
         return userMapper.toDto(userService.get(id));
     }
 
     @GetMapping("/username/{username}")
+    @PreAuthorize("isAuthenticated()")
     public UserDto getByUsername(@PathVariable String username) {
         return userMapper.toDto(userService.getByUsername(username));
     }
 
     @PostMapping
+    @PreAuthorize("hasAnyRole('SUPER_ADMIN', 'ADMIN')")
     public UserDto create(@RequestBody UserDto dto) {
         return userMapper.toDto(userService.create(userMapper.toEntity(dto)));
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAnyRole('SUPER_ADMIN', 'ADMIN')")
     public UserDto update(@PathVariable Integer id, @RequestBody UserDto dto) {
         return userMapper.toDto(userService.update(id, userMapper.toEntity(dto)));
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('SUPER_ADMIN')")
     public ResponseEntity<Void> delete(@PathVariable Integer id) {
         userService.delete(id);
         return ResponseEntity.noContent().build();

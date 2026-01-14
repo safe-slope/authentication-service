@@ -4,12 +4,14 @@ import io.github.safeslope.api.v1.dto.TenantDto;
 import io.github.safeslope.api.v1.mapper.TenantMapper;
 import io.github.safeslope.tenant.service.TenantService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/tenants")
+@PreAuthorize("hasRole('SUPER_ADMIN')")
 public class TenantController {
 
     private final TenantService tenantService;
