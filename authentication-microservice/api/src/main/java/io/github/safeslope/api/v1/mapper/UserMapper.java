@@ -16,6 +16,11 @@ import java.util.List;
 public abstract class UserMapper {
     protected TenantService tenantService;
 
+    @Autowired
+    public void setTenantService(TenantService tenantService) {
+        this.tenantService = tenantService;
+    }
+
     @Mapping(target = "role", expression = "java(entity.getRole() != null ? entity.getRole().name() : null)")
     @Mapping(target = "tenantId", source = "tenant.id")
     public abstract UserDto toDto(User entity);
