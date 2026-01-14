@@ -14,6 +14,9 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    
+    // BCrypt format pattern: $2[a|b|y]$[cost]$[22 character salt][31 character hash]
+    private static final String BCRYPT_PATTERN = "^\\$2[aby]\\$\\d{2}\\$.{53}$";
 
     public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
@@ -53,8 +56,7 @@ public class UserService {
         // Only encode and update password if it's provided and not already encoded
         if (updated.getPassword() != null && !updated.getPassword().isEmpty()) {
             // Check if password is already encoded using BCrypt format pattern
-            // BCrypt format: $2[a|b|y]$[cost]$[22 character salt][31 character hash]
-            if (!updated.getPassword().matches("^\\$2[aby]\\$\\d{2}\\$.{53}$")) {
+            if (!updated.getPassword().matches(BCRYPT_PATTERN)) {
                 existing.setPassword(passwordEncoder.encode(updated.getPassword()));
             } else {
                 existing.setPassword(updated.getPassword());
