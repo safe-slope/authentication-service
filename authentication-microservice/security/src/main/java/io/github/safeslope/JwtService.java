@@ -20,15 +20,18 @@ public class JwtService {
 
     public static final String SECRET = "5367566859703373367639792F423F452848284D6251655468576D5A71347437";
 
-    public String generateToken(String username) { // Use username as a username
+    public String generateToken(User user) {
         Map<String, Object> claims = new HashMap<>();
-        return createToken(claims, username);
+        if (user.getTenant() != null) {
+            claims.put("tenantId", user.getTenant().getId());
+        }
+        return createToken(claims, String.valueOf(user.getId()));
     }
 
-    private String createToken(Map<String, Object> claims, String username) {
+    private String createToken(Map<String, Object> claims, String userId) {
         return Jwts.builder()
                 .setClaims(claims)
-                .setSubject(username)
+                .setSubject(userId)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 30))
                 .signWith(getSignKey(), SignatureAlgorithm.HS256)
@@ -40,8 +43,17 @@ public class JwtService {
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
-    public String extractUsername(String token) {
+    public String extractUserId(String token) {
         return extractClaim(token, Claims::getSubject);
+    }
+
+    public Integer extractTenantId(String token) {
+        Claims claims = extractAllClaims(token);
+        Object tenantId = claims.get("tenantId");
+        if (tenantId == null) {
+            return null;
+        }
+        return tenantId instanceof Integer ? (Integer) tenantId : Integer.valueOf(tenantId.toString());
     }
 
     public Date extractExpiration(String token) {
@@ -66,7 +78,7 @@ public class JwtService {
     }
 
     public Boolean validateToken(String token, User user) {
-        final String username = extractUsername(token);
-        return (username.equals(user.getUsername()) && !isTokenExpired(token));
+        final String userId = extractUserId(token);
+        return (userId.equals(String.valueOf(user.getId())) && !isTokenExpired(token));
     }
 }
