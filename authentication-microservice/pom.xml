@@ -25,7 +25,7 @@
         <mapstruct.version>1.6.3</mapstruct.version>
         <java.version>17</java.version>
         <jwt.version>0.12.3</jwt.version>
-
+        <junit.version>4.12</junit.version>
     </properties>
 
     <build>
@@ -167,6 +167,13 @@
                 <artifactId>jjwt-jackson</artifactId>
                 <version>${jwt.version}</version>
                 <scope>runtime</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>${junit.version}</version>
+                <scope>test</scope>
             </dependency>
 
         </dependencies>
