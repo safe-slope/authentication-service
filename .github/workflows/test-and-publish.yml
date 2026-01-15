@@ -67,9 +67,9 @@ jobs:
       - uses: googleapis/release-please-action@v4
         id: release
         with:
-          release-type: maven
-          target-branch: 'release'
           token: ${{ secrets.GITHUB_TOKEN }}
+          config-file: 'release-please-config.json'
+          manifest-file: 'release-please-manifest.json'
 
   # 4. Build and push Docker image to GitHub Packages
   build-and-push-image:
