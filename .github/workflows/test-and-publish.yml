@@ -65,6 +65,7 @@ jobs:
         id: release
         with:
           release-type: maven
+          target-branch: 'release'
 
   # 4. Build and push Docker image to GitHub Packages
   build-and-push-image:
