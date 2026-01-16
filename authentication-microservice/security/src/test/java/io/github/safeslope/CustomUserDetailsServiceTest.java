@@ -1,7 +1,7 @@
 package io.github.safeslope;
 
 import io.github.safeslope.entities.User;
-import io.github.safeslope.user.repository.UserRepository;
+import io.github.safeslope.user.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,7 +19,7 @@ import static org.mockito.Mockito.*;
 class CustomUserDetailsServiceTest {
 
     @Mock
-    private UserRepository userRepository;
+    private UserService userService;
 
     @InjectMocks
     private CustomUserDetailsService userDetailsService;
@@ -41,7 +41,7 @@ class CustomUserDetailsServiceTest {
     @Test
     void loadUserByUsername_shouldReturnUserDetailsWhenUserExists() {
         // Arrange
-        when(userRepository.findByUsername(USERNAME)).thenReturn(testUser);
+        when(userService.getByUsername(USERNAME)).thenReturn(testUser);
 
         // Act
         UserDetails userDetails = userDetailsService.loadUserByUsername(USERNAME);
@@ -50,14 +50,16 @@ class CustomUserDetailsServiceTest {
         assertNotNull(userDetails);
         assertEquals(USERNAME, userDetails.getUsername());
         assertEquals(PASSWORD, userDetails.getPassword());
-        assertTrue(userDetails.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_USER")));
-        verify(userRepository).findByUsername(USERNAME);
+        assertTrue(userDetails.getAuthorities().contains(new SimpleGrantedAuthority("USER")));
+
+        verify(userService).getByUsername(USERNAME);
+        verifyNoMoreInteractions(userService);
     }
 
     @Test
     void loadUserByUsername_shouldThrowExceptionWhenUserNotFound() {
         // Arrange
-        when(userRepository.findByUsername(USERNAME)).thenReturn(null);
+        when(userService.getByUsername(USERNAME)).thenReturn(null);
 
         // Act & Assert
         UsernameNotFoundException exception = assertThrows(
@@ -65,32 +67,40 @@ class CustomUserDetailsServiceTest {
                 () -> userDetailsService.loadUserByUsername(USERNAME)
         );
         assertEquals("User not found: " + USERNAME, exception.getMessage());
-        verify(userRepository).findByUsername(USERNAME);
+
+        verify(userService).getByUsername(USERNAME);
+        verifyNoMoreInteractions(userService);
     }
 
     @Test
     void loadUserByUsername_shouldMapAdminRoleCorrectly() {
         // Arrange
         testUser.setRole(User.Role.ADMIN);
-        when(userRepository.findByUsername(USERNAME)).thenReturn(testUser);
+        when(userService.getByUsername(USERNAME)).thenReturn(testUser);
 
         // Act
         UserDetails userDetails = userDetailsService.loadUserByUsername(USERNAME);
 
         // Assert
-        assertTrue(userDetails.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN")));
+        assertTrue(userDetails.getAuthorities().contains(new SimpleGrantedAuthority("ADMIN")));
+
+        verify(userService).getByUsername(USERNAME);
+        verifyNoMoreInteractions(userService);
     }
 
     @Test
     void loadUserByUsername_shouldMapSuperAdminRoleCorrectly() {
         // Arrange
         testUser.setRole(User.Role.SUPER_ADMIN);
-        when(userRepository.findByUsername(USERNAME)).thenReturn(testUser);
+        when(userService.getByUsername(USERNAME)).thenReturn(testUser);
 
         // Act
         UserDetails userDetails = userDetailsService.loadUserByUsername(USERNAME);
 
         // Assert
-        assertTrue(userDetails.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_SUPER_ADMIN")));
+        assertTrue(userDetails.getAuthorities().contains(new SimpleGrantedAuthority("SUPER_ADMIN")));
+
+        verify(userService).getByUsername(USERNAME);
+        verifyNoMoreInteractions(userService);
     }
 }
