@@ -1,5 +1,26 @@
 # Changelog
 
+## [1.2.0](https://github.com/safe-slope/authentication-service/compare/authentication-microservice-v1.1.0...authentication-microservice-v1.2.0) (2026-01-16)
+
+
+### Features
+
+* add Mockito dependency to `pom.xml` files in authentication microservice ([04ccc88](https://github.com/safe-slope/authentication-service/commit/04ccc88d52bfb7cf81e91a4fcd3110903141b31a))
+* configure application properties with environment-specific profiles ([58e3ae3](https://github.com/safe-slope/authentication-service/commit/58e3ae3b67503c51f81d4717c09dcb0170b7cbbb))
+
+
+### Bug Fixes
+
+* remove redundant application configuration properties in authentication microservice ([7cbbdc0](https://github.com/safe-slope/authentication-service/commit/7cbbdc033ae5235ed313aff8e89d3c0a69e11f59))
+* rename database table `user` to `app_user` in `User` entity ([e777c2c](https://github.com/safe-slope/authentication-service/commit/e777c2cc7213a0590ae420edcc727798c239f86f))
+* replace UserRepository with UserService in CustomUserDetailsService for improved code reuse ([3a916b4](https://github.com/safe-slope/authentication-service/commit/3a916b470501c465fe951a3463cb29666df3181d))
+* update CustomUserDetailsServiceTest to use UserService instead of UserRepository ([13c5131](https://github.com/safe-slope/authentication-service/commit/13c51316e79b233b082368014545e01a8d876761))
+
+
+### Documentation
+
+* add configuration documentation for environment profiles ([c3b1751](https://github.com/safe-slope/authentication-service/commit/c3b1751de92b70a4652d0e6a856ec03db3b32059))
+
 ## [1.1.0](https://github.com/safe-slope/authentication-service/compare/authentication-microservice-v1.0.0...authentication-microservice-v1.1.0) (2026-01-16)
 
 
