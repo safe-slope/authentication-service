@@ -5,6 +5,7 @@
         <groupId>io.github.safeslope</groupId>
         <artifactId>authentication-microservice</artifactId>
         <version>1.0.1-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
 
     <artifactId>entity</artifactId>
