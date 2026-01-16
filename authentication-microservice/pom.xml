@@ -24,6 +24,7 @@
         <java.version>17</java.version>
         <jwt.version>0.12.3</jwt.version>
         <junit.version>4.12</junit.version>
+        <postgresql.version>42.7.8</postgresql.version>
     </properties>
 
     <build>
@@ -165,6 +166,12 @@
                 <artifactId>junit</artifactId>
                 <version>${junit.version}</version>
                 <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.postgresql</groupId>
+                <artifactId>postgresql</artifactId>
+                <version>${postgresql.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
