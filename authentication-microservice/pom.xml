@@ -68,38 +68,38 @@
 
     <dependencyManagement>
         <dependencies>
+            <!-- 1. Spring Boot BOM FIRST -->
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-dependencies</artifactId>
-                <version>${spring.boot.version}</version>
+                <version>${spring.boot. version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+
+            <!-- 2. Internal modules -->
             <dependency>
                 <groupId>io.github.safeslope</groupId>
                 <artifactId>api</artifactId>
                 <version>${project.version}</version>
-                <scope>compile</scope>
             </dependency>
             <dependency>
                 <groupId>io.github.safeslope</groupId>
                 <artifactId>security</artifactId>
                 <version>${project.version}</version>
-                <scope>compile</scope>
             </dependency>
             <dependency>
                 <groupId>io.github.safeslope</groupId>
                 <artifactId>service</artifactId>
                 <version>${project.version}</version>
-                <scope>compile</scope>
             </dependency>
             <dependency>
                 <groupId>io.github.safeslope</groupId>
                 <artifactId>entity</artifactId>
                 <version>${project.version}</version>
-                <scope>compile</scope>
             </dependency>
 
+            <!-- 3. Spring Boot starters - NO versions (managed by BOM) -->
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-test</artifactId>
@@ -111,20 +111,19 @@
                 <scope>test</scope>
             </dependency>
             <dependency>
-                <groupId>org.springframework.boot</groupId>
+                <groupId>org. springframework.boot</groupId>
                 <artifactId>spring-boot-starter-data-jpa</artifactId>
             </dependency>
             <dependency>
-                <groupId>org.springframework.boot</groupId>
+                <groupId>org. springframework.boot</groupId>
                 <artifactId>spring-boot-starter-security</artifactId>
-                <scope>compile</scope>
             </dependency>
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-web</artifactId>
             </dependency>
 
-
+            <!-- 4. Other dependencies with versions -->
             <dependency>
                 <groupId>org.projectlombok</groupId>
                 <artifactId>lombok</artifactId>
@@ -135,10 +134,9 @@
                 <groupId>org.mapstruct</groupId>
                 <artifactId>mapstruct-processor</artifactId>
                 <version>${mapstruct.version}</version>
-                <scope>compile</scope>
             </dependency>
             <dependency>
-                <groupId>org.mapstruct</groupId>
+                <groupId>org. mapstruct</groupId>
                 <artifactId>mapstruct</artifactId>
                 <version>${mapstruct.version}</version>
                 <scope>provided</scope>
@@ -168,7 +166,6 @@
                 <version>${junit.version}</version>
                 <scope>test</scope>
             </dependency>
-
         </dependencies>
     </dependencyManagement>
 
