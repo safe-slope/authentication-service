@@ -1,6 +1,6 @@
 .vscode
 .idea
-.env
+authentication-microservice/.env
 idea/
 
 target/
