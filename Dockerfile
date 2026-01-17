@@ -1,16 +1,16 @@
 # Multi-stage Dockerfile for Spring Boot multimodule Maven application
 
 # Stage 1: Build stage
-FROM maven:3.9-eclipse-temurin-17 AS builder
-
-# Set working directory
-WORKDIR /app
-
-# Copy the entire source code
-COPY authentication-microservice ./authentication-microservice
-
-# Build the application (skip tests for faster builds)
-RUN cd authentication-microservice && mvn clean package -DskipTests -B
+#FROM maven:3.9-eclipse-temurin-17 AS builder
+#
+## Set working directory
+#WORKDIR /app
+#
+## Copy the entire source code
+#COPY authentication-microservice ./authentication-microservice
+#
+## Build the application (skip tests for faster builds)
+#RUN cd authentication-microservice && mvn clean package -DskipTests -B
 
 # Stage 2: Runtime stage
 FROM eclipse-temurin:17-jre-jammy
@@ -20,7 +20,7 @@ WORKDIR /app
 
 # Copy the built JAR from the builder stage
 # The Spring Boot Maven plugin creates an executable JAR in the api module
-COPY --from=builder /app/authentication-microservice/api/target/*.jar app.jar
+COPY authentication-microservice/api/target/app.jar app.jar
 
 # Expose the application port
 EXPOSE 8080
