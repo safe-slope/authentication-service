@@ -20,7 +20,7 @@ WORKDIR /app
 
 # Copy the built JAR from the builder stage
 # The Spring Boot Maven plugin creates an executable JAR in the api module
-COPY authentication-microservice/api/target/*.jar app.jar
+COPY authentication-microservice/api/target/app.jar app.jar
 
 # Expose the application port
 EXPOSE 8080
