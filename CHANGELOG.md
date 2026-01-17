@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.3.0](https://github.com/safe-slope/authentication-service/compare/authentication-microservice-v1.2.0...authentication-microservice-v1.3.0) (2026-01-17)
+
+
+### Features
+
+* enhance CI workflow to upload JAR artifact and update Docker build process ([010b405](https://github.com/safe-slope/authentication-service/commit/010b40571fdd5991e6033d7f57efc8f7e6cb07b1))
+
+
+### Bug Fixes
+
+* correct Dockerfile to use specific JAR filename for COPY command ([30f72ed](https://github.com/safe-slope/authentication-service/commit/30f72edd2244882c5c29182ee16ce56704205ad1))
+* update artifact path in CI workflow to match new JAR file location ([b58eea7](https://github.com/safe-slope/authentication-service/commit/b58eea7da99f2326c9ef77eb78897aca7bd15ba6))
+* update target branch in CI workflow trigger to `main` ([9ac80b8](https://github.com/safe-slope/authentication-service/commit/9ac80b808f3734ddecf3c518ae00ff49d7fc47d0))
+
 ## [1.2.0](https://github.com/safe-slope/authentication-service/compare/authentication-microservice-v1.1.0...authentication-microservice-v1.2.0) (2026-01-16)
 
 
