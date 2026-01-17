@@ -57,7 +57,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: app-jar
-          path: authentication-microservice/target/*.jar
+          path: authentication-microservice/api/target/app.jar
 
 
   # 3. Create a release using release-please
