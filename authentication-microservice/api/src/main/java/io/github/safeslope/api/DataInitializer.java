@@ -3,11 +3,12 @@ package io.github.safeslope.api;
 import io.github.safeslope.entities.Tenant;
 import io.github.safeslope.entities.User;
 import io.github.safeslope.tenant.repository.TenantRepository;
+import io.github.safeslope.tenant.service.TenantService;
 import io.github.safeslope.user.repository.UserRepository;
+import io.github.safeslope.user.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -15,16 +16,19 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class DataInitializer implements CommandLineRunner {
 
+    private final UserService userService;
+    private final TenantService tenantService;
     private final UserRepository userRepository;
     private final TenantRepository tenantRepository;
-    private final PasswordEncoder passwordEncoder;
 
-    public DataInitializer(UserRepository userRepository, 
-                          TenantRepository tenantRepository,
-                          PasswordEncoder passwordEncoder) {
+    public DataInitializer(UserService userService,
+                          TenantService tenantService,
+                          UserRepository userRepository,
+                          TenantRepository tenantRepository) {
+        this.userService = userService;
+        this.tenantService = tenantService;
         this.userRepository = userRepository;
         this.tenantRepository = tenantRepository;
-        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -44,7 +48,7 @@ public class DataInitializer implements CommandLineRunner {
             testTenant = Tenant.builder()
                     .name("test-tenant")
                     .build();
-            testTenant = tenantRepository.save(testTenant);
+            testTenant = tenantService.create(testTenant);
             log.info("Created test tenant with ID: {}", testTenant.getId());
         } else {
             log.info("Test tenant already exists with ID: {}", testTenant.getId());
@@ -53,12 +57,12 @@ public class DataInitializer implements CommandLineRunner {
         // Create test user with SUPER_ADMIN role
         User testUser = User.builder()
                 .username("user-test")
-                .password(passwordEncoder.encode("user-test"))
+                .password("user-test")
                 .role(User.Role.SUPER_ADMIN)
                 .tenant(testTenant)
                 .build();
         
-        testUser = userRepository.save(testUser);
+        testUser = userService.create(testUser);
         log.info("Created test user '{}' with SUPER_ADMIN role and ID: {}", 
                 testUser.getUsername(), testUser.getId());
     }
