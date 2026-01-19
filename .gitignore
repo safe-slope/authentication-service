@@ -21,3 +21,6 @@ buildNumber.properties
 # JDT-specific (Eclipse Java Development Tools)
 .classpath
 /.idea/
+
+DataInitializer.java
+docker-compose.yml
