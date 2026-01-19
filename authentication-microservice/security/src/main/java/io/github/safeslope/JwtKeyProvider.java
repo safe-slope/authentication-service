@@ -14,11 +14,15 @@ public class JwtKeyProvider {
     @Value("${spring.security.jwt.private-key}")
     private String privateKeyBase64;
 
-    private PrivateKey cachedPrivateKey;
+    private volatile PrivateKey cachedPrivateKey;
 
     public PrivateKey privateKey() {
         if (cachedPrivateKey == null) {
-            cachedPrivateKey = initializePrivateKey();
+            synchronized (this) {
+                if (cachedPrivateKey == null) {
+                    cachedPrivateKey = initializePrivateKey();
+                }
+            }
         }
         return cachedPrivateKey;
     }
