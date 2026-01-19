@@ -38,7 +38,7 @@ public class DataInitializer implements CommandLineRunner {
             return;
         }
         
-        // Create test tenant
+        // Create or get test tenant
         Tenant testTenant = tenantRepository.findByName("test-tenant");
         if (testTenant == null) {
             testTenant = Tenant.builder()
@@ -46,6 +46,8 @@ public class DataInitializer implements CommandLineRunner {
                     .build();
             testTenant = tenantRepository.save(testTenant);
             log.info("Created test tenant with ID: {}", testTenant.getId());
+        } else {
+            log.info("Test tenant already exists with ID: {}", testTenant.getId());
         }
         
         // Create test user with SUPER_ADMIN role
