@@ -33,7 +33,15 @@ java -jar api.jar --spring.profiles.active=production
 ## Required Environment Variables
 
 ### All Environments
-- `JWT_PRIVATE_KEY`: Private key for JWT token signing (required)
+- `JWT_PRIVATE_KEY`: Private key for JWT token signing in PEM format (required)
+  - Format: PEM-encoded RSA private key with headers
+  - Example: 
+    ```
+    -----BEGIN PRIVATE KEY-----
+    MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQC...
+    -----END PRIVATE KEY-----
+    ```
+  - Can be provided as a single line or multiline string
 
 ### Development (optional with defaults)
 - `DB_URL`: Database connection URL (default: jdbc:postgresql://localhost:5432/authdb_dev)
