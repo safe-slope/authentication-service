@@ -12,11 +12,18 @@ import java.util.Base64;
 public class JwtKeyProvider {
 
     @Value("${spring.security.jwt.private-key}")
-    private String privateKeyBase64;
+    private String privateKey;
 
     public PrivateKey privateKey() {
         try {
-            byte[] decoded = Base64.getDecoder().decode(privateKeyBase64);
+            // Remove PEM headers/footers and whitespace if present
+            String key = privateKey
+                    .replace("-----BEGIN PRIVATE KEY-----", "")
+                    .replace("-----END PRIVATE KEY-----", "")
+                    .replaceAll("\\s+", "");
+
+            // Decode the PEM-formatted key (which uses base64 internally)
+            byte[] decoded = Base64.getDecoder().decode(key);
 
             PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(decoded);
             return KeyFactory.getInstance("RSA").generatePrivate(spec);
