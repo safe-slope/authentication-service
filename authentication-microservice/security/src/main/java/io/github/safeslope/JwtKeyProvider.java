@@ -7,46 +7,48 @@ import java.security.KeyFactory;
 import java.security.PrivateKey;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.util.Base64;
-import java.util.regex.Pattern;
 
 @Component
 public class JwtKeyProvider {
 
     @Value("${spring.security.jwt.private-key}")
-    private String privateKey;
-
-    private static final Pattern PEM_PATTERN = Pattern.compile(
-        "-----BEGIN (RSA )?PRIVATE KEY-----([\\s\\S]*?)-----END (RSA )?PRIVATE KEY-----"
-    );
+    private String privateKeyBase64;
 
     public PrivateKey privateKey() {
-        String key = privateKey.trim();
-        
-        // Extract base64 content from PEM format if present
-        var matcher = PEM_PATTERN.matcher(key);
-        if (matcher.find()) {
-            key = matcher.group(2).replaceAll("\\s+", "");
-        } else {
-            // If no PEM headers, assume it's already base64 content
-            key = key.replaceAll("\\s+", "");
+        if (privateKeyBase64 == null || privateKeyBase64.isBlank()) {
+            throw new IllegalStateException("JWT private key is not configured");
         }
 
-        // Decode the base64-encoded key content
-        byte[] decoded;
+        // MUST be single-line base64 PKCS#8 DER
+        if (privateKeyBase64.contains("BEGIN") || privateKeyBase64.contains("END")) {
+            throw new IllegalStateException(
+                    "Invalid private key format: PEM is not supported. " +
+                            "Provide a single-line Base64-encoded PKCS#8 DER key."
+            );
+        }
+
+        if (privateKeyBase64.matches(".*\\s+.*")) {
+            throw new IllegalStateException(
+                    "Invalid private key format: key must be a single-line Base64 string."
+            );
+        }
+
+        final byte[] derBytes;
         try {
-            decoded = Base64.getDecoder().decode(key);
+            derBytes = Base64.getDecoder().decode(privateKeyBase64);
         } catch (IllegalArgumentException e) {
             throw new IllegalStateException(
-                "Invalid private key format. Expected PEM format " +
-                "(e.g., '-----BEGIN PRIVATE KEY-----...') or base64-encoded string.", e);
+                    "Invalid private key format: not valid Base64", e
+            );
         }
 
         try {
-            PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(decoded);
+            PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(derBytes);
             return KeyFactory.getInstance("RSA").generatePrivate(spec);
         } catch (Exception e) {
-            throw new IllegalStateException("Invalid private key", e);
+            throw new IllegalStateException(
+                    "Invalid private key: expected PKCS#8 DER RSA key", e
+            );
         }
     }
 }
-
