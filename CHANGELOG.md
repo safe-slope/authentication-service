@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.3.1](https://github.com/safe-slope/authentication-service/compare/authentication-microservice-v1.3.0...authentication-microservice-v1.3.1) (2026-01-21)
+
+
+### Bug Fixes
+
+* add public key property for JWT in application configuration ([7cca6c5](https://github.com/safe-slope/authentication-service/commit/7cca6c5138e2fc90723604613dcf05978ebd0f07))
+* add public key support and validation in JwtKeyProvider ([d224046](https://github.com/safe-slope/authentication-service/commit/d22404610047faaa558382ec0200dd545e4086b4))
+* deprecate token expiration validation in JwtService ([fae2b49](https://github.com/safe-slope/authentication-service/commit/fae2b49e5ee96b07ec828ec9a9b93a0fbda79413))
+* enforce single-line Base64 private key format in JwtKeyProvider ([79ab4ab](https://github.com/safe-slope/authentication-service/commit/79ab4ab02624b53c8f3dd51c63a40148b0070567))
+* enforce single-line Base64 private key format in JwtKeyProvider ([9f28d39](https://github.com/safe-slope/authentication-service/commit/9f28d39e8144217da3c0f3c06d7b0fc3431870d0))
+* update JwtService to use public key verification for JWT parsing ([3fd20d5](https://github.com/safe-slope/authentication-service/commit/3fd20d51a5c7912373073917afd9f7fcfc3f38bd))
+
 ## [1.3.0](https://github.com/safe-slope/authentication-service/compare/authentication-microservice-v1.2.0...authentication-microservice-v1.3.0) (2026-01-17)
 
 
