@@ -3,7 +3,6 @@ package io.github.safeslope;
 import io.github.safeslope.entities.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.stereotype.Component;
 import java.security.Key;
 import java.util.Date;
@@ -84,23 +83,23 @@ public class JwtService {
 
     public Claims extractAllClaims(String token) {
         return Jwts.parser()
-                .setSigningKey(getSignKey())
+                .verifyWith(jwtKeyProvider.publicKey())
                 .build()
-                .parseClaimsJws(token)
-                .getBody();
+                .parseSignedClaims(token)
+                .getPayload();
     }
 
-    private Boolean isTokenExpired(String token) {
-        return extractExpiration(token).before(new Date());
-    }
-
-    public Boolean validateToken(String token, User user) {
-        try {
-            final String userId = extractUserId(token);
-            return (userId.equals(String.valueOf(user.getId())) && !isTokenExpired(token));
-        } catch (Exception e) {
-            // Token parsing failed or is malformed
-            return false;
-        }
-    }
+//    private Boolean isTokenExpired(String token) {
+//        return extractExpiration(token).before(new Date());
+//    }
+//
+//    public Boolean validateToken(String token, User user) {
+//        try {
+//            final String userId = extractUserId(token);
+//            return (userId.equals(String.valueOf(user.getId())) && !isTokenExpired(token));
+//        } catch (Exception e) {
+//            // Token parsing failed or is malformed
+//            return false;
+//        }
+//    }
 }
