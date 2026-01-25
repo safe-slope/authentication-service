@@ -3,6 +3,8 @@ package io.github.safeslope.api.v1.controller;
 import io.github.safeslope.api.v1.dto.UserDto;
 import io.github.safeslope.api.v1.mapper.UserMapper;
 import io.github.safeslope.user.service.UserService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -23,8 +25,8 @@ public class UserController {
 
     @GetMapping
     @PreAuthorize("hasRole('SUPER_ADMIN')")
-    public List<UserDto> list() {
-        return userMapper.toDtoList(userService.getAll());
+    public Page<UserDto> list(Pageable pageable) {
+        return userService.getAll(pageable).map(userMapper::toDto);
     }
 
     @GetMapping("/{id}")

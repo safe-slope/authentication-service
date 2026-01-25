@@ -7,8 +7,13 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
@@ -66,6 +71,24 @@ class UserServiceTest {
 
         verify(userRepository).existsById(5);
         verify(userRepository).deleteById(5);
+        verifyNoMoreInteractions(userRepository);
+        verifyNoInteractions(passwordEncoder);
+    }
+
+    @Test
+    void getAll_withPageable_returnsPage() {
+        User u1 = User.builder().username("user1").password("123").build();
+        User u2 = User.builder().username("user2").password("456").build();
+        List<User> users = List.of(u1, u2);
+        Page<User> userPage = new PageImpl<>(users, PageRequest.of(0, 10), 2);
+
+        when(userRepository.findAll(any(Pageable.class))).thenReturn(userPage);
+
+        Page<User> result = userService.getAll(PageRequest.of(0, 10));
+
+        assertThat(result.getContent()).hasSize(2);
+        assertThat(result.getTotalElements()).isEqualTo(2);
+        verify(userRepository).findAll(any(Pageable.class));
         verifyNoMoreInteractions(userRepository);
         verifyNoInteractions(passwordEncoder);
     }

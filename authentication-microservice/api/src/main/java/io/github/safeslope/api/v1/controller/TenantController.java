@@ -3,6 +3,8 @@ package io.github.safeslope.api.v1.controller;
 import io.github.safeslope.api.v1.dto.TenantDto;
 import io.github.safeslope.api.v1.mapper.TenantMapper;
 import io.github.safeslope.tenant.service.TenantService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -23,8 +25,8 @@ public class TenantController {
     }
 
     @GetMapping
-    public List<TenantDto> list() {
-        return tenantMapper.toDtoList(tenantService.getAll());
+    public Page<TenantDto> list(Pageable pageable) {
+        return tenantService.getAll(pageable).map(tenantMapper::toDto);
     }
 
     @GetMapping("/{id}")
