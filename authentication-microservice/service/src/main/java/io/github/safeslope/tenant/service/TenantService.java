@@ -4,6 +4,8 @@ import io.github.safeslope.entities.Tenant;
 import io.github.safeslope.tenant.repository.TenantNotFoundException;
 import io.github.safeslope.tenant.repository.TenantRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,6 +21,10 @@ public class TenantService {
 
     public List<Tenant> getAll() {
         return tenantRepository.findAll();
+    }
+
+    public Page<Tenant> getAll(Pageable pageable) {
+        return tenantRepository.findAll(pageable);
     }
 
     public Tenant get(Integer id) {
