@@ -82,3 +82,67 @@ java -jar api.jar --spring.profiles.active=production
 - Always use environment variables for sensitive data
 - JWT private keys should be securely generated and stored
 - Production database credentials must be set via secure secrets management
+
+## Health Check Endpoints
+
+The application exposes Spring Boot Actuator health endpoints for Kubernetes health probes:
+
+### Available Endpoints
+
+- **`/actuator/health`**: Overall application health status
+- **`/actuator/health/liveness`**: Liveness probe endpoint for Kubernetes
+- **`/actuator/health/readiness`**: Readiness probe endpoint for Kubernetes
+
+### Health Check Responses
+
+**Healthy Response (HTTP 200):**
+```json
+{
+  "status": "UP"
+}
+```
+
+**Unhealthy Response (HTTP 503):**
+```json
+{
+  "status": "DOWN"
+}
+```
+
+### Kubernetes Configuration Example
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: authentication-service
+spec:
+  containers:
+  - name: auth-service
+    image: authentication-service:latest
+    ports:
+    - containerPort: 8080
+    livenessProbe:
+      httpGet:
+        path: /actuator/health/liveness
+        port: 8080
+      initialDelaySeconds: 30
+      periodSeconds: 10
+      timeoutSeconds: 5
+      failureThreshold: 3
+    readinessProbe:
+      httpGet:
+        path: /actuator/health/readiness
+        port: 8080
+      initialDelaySeconds: 10
+      periodSeconds: 5
+      timeoutSeconds: 3
+      failureThreshold: 3
+```
+
+### Notes
+
+- Health endpoints are publicly accessible (no authentication required)
+- Detailed health information is only shown to authenticated users
+- Liveness probe checks if the application is running
+- Readiness probe checks if the application is ready to accept traffic
