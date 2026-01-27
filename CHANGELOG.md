@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.2](https://github.com/safe-slope/authentication-service/compare/authentication-microservice-v1.4.1...authentication-microservice-v1.4.2) (2026-01-27)
+
+
+### Bug Fixes
+
+* conditionally run Qodana job and remove unnecessary dependency from release-please job ([0e9e3aa](https://github.com/safe-slope/authentication-service/commit/0e9e3aa6ff92c3760e792dbd7e0f85a4209a18e2))
+
 ## [1.4.1](https://github.com/safe-slope/authentication-service/compare/authentication-microservice-v1.4.0...authentication-microservice-v1.4.1) (2026-01-27)
 
 
