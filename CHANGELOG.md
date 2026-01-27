@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.1](https://github.com/safe-slope/authentication-service/compare/authentication-microservice-v1.4.0...authentication-microservice-v1.4.1) (2026-01-27)
+
+
+### Bug Fixes
+
+* update .gitignore to re-include docker-compose.yml and remove DockerfileDev ([837e249](https://github.com/safe-slope/authentication-service/commit/837e249c500e1662d9802259049052f00a058ad0))
+
 ## [1.4.0](https://github.com/safe-slope/authentication-service/compare/authentication-microservice-v1.3.1...authentication-microservice-v1.4.0) (2026-01-27)
 
 
