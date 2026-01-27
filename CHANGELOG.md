@@ -1,5 +1,24 @@
 # Changelog
 
+## [1.4.0](https://github.com/safe-slope/authentication-service/compare/authentication-microservice-v1.3.1...authentication-microservice-v1.4.0) (2026-01-27)
+
+
+### Features
+
+* add PageableDefault annotation for better API defaults ([73a758d](https://github.com/safe-slope/authentication-service/commit/73a758d2d54c0428f13e10f0d3af10d154554260))
+* add pagination support to user and tenant list endpoints ([854af54](https://github.com/safe-slope/authentication-service/commit/854af54b00dc35414c371c1af3fec3856dd356ed))
+* add Spring Boot Actuator healthcheck endpoint for Kubernetes ([2de26b2](https://github.com/safe-slope/authentication-service/commit/2de26b2d24cb958f4ce012d5ca4fc59a2fb229c2))
+
+
+### Bug Fixes
+
+* set health endpoint show-details to never in production ([a6f61cd](https://github.com/safe-slope/authentication-service/commit/a6f61cd31df78b407161a5292ec6f4aee5a10c78))
+
+
+### Documentation
+
+* add Kubernetes health probe configuration to CONFIG.md ([a68237d](https://github.com/safe-slope/authentication-service/commit/a68237d227c10da2ef241e04e8e4a48c16ff8d7b))
+
 ## [1.3.1](https://github.com/safe-slope/authentication-service/compare/authentication-microservice-v1.3.0...authentication-microservice-v1.3.1) (2026-01-21)
 
 
