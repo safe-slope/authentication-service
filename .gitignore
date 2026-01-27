@@ -24,4 +24,3 @@ buildNumber.properties
 
 DataInitializer.java
 docker-compose.yml
-DockerfileDev
