@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.5.0](https://github.com/safe-slope/authentication-service/compare/authentication-microservice-v1.4.2...authentication-microservice-v1.5.0) (2026-01-28)
+
+
+### Features
+
+* add DataInitializer for test data setup in development environment ([d31c7ea](https://github.com/safe-slope/authentication-service/commit/d31c7ea4d879af067bff72d250f07f55c0cf5442))
+
 ## [1.4.2](https://github.com/safe-slope/authentication-service/compare/authentication-microservice-v1.4.1...authentication-microservice-v1.4.2) (2026-01-27)
 
 
