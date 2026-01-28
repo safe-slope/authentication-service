@@ -22,5 +22,4 @@ buildNumber.properties
 .classpath
 /.idea/
 
-DataInitializer.java
 docker-compose.yml
