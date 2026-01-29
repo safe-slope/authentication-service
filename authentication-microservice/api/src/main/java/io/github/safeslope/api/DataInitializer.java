@@ -7,8 +7,9 @@ import io.github.safeslope.tenant.service.TenantService;
 import io.github.safeslope.user.service.UserNotFoundException;
 import io.github.safeslope.user.service.UserService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.context.annotation.Profile;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 import java.security.MessageDigest;
@@ -16,13 +17,22 @@ import java.security.PrivateKey;
 import java.util.Base64;
 
 @Component
-@Profile("development")
+@ConditionalOnProperty(name = "app.data-initializer.enabled", havingValue = "true", matchIfMissing = false)
 @Slf4j
 public class DataInitializer implements CommandLineRunner {
 
     private final UserService userService;
     private final TenantService tenantService;
     private final JwtKeyProvider jwtKeyProvider;
+
+    @Value("${app.data-initializer.tenant-name}")
+    private String tenantName;
+
+    @Value("${app.data-initializer.username}")
+    private String username;
+
+    @Value("${app.data-initializer.password}")
+    private String password;
 
     public DataInitializer(UserService userService,
                            TenantService tenantService,
@@ -34,7 +44,7 @@ public class DataInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        log.info("Initializing test data for development environment...");
+        log.info("Initializing super admin user with credentials from environment...");
 
         // Log JWT private key diagnostics (SAFE: no key material printed)
         try {
@@ -47,53 +57,53 @@ public class DataInitializer implements CommandLineRunner {
             log.info("JWT private key loaded successfully. algorithm={}, format={}, encodedBytes={}, sha256(b64)={}",
                     pk.getAlgorithm(), pk.getFormat(), encoded != null ? encoded.length : -1, fingerprintB64);
         } catch (Exception e) {
-            log.error("Failed to load JWT private key via JwtKeyProvider in development profile: {}", e.getMessage(), e);
+            log.error("Failed to load JWT private key via JwtKeyProvider: {}", e.getMessage(), e);
         }
 
-        // Check if test user already exists
+        // Check if super admin user already exists
         try {
-            userService.getByUsername("user-test");
-            log.info("Test user already exists, skipping initialization");
+            userService.getByUsername(username);
+            log.info("Super admin user '{}' already exists, skipping initialization", username);
             return;
         } catch (UserNotFoundException e) {
             // User doesn't exist, proceed with initialization
         }
 
-        // Create or get test tenant
-        Tenant testTenant;
+        // Create or get tenant
+        Tenant tenant;
         try {
-            testTenant = tenantService.getAll().stream()
-                    .filter(t -> "test-tenant".equals(t.getName()))
+            tenant = tenantService.getAll().stream()
+                    .filter(t -> tenantName.equals(t.getName()))
                     .findFirst()
                     .orElse(null);
 
-            if (testTenant == null) {
-                testTenant = Tenant.builder()
-                        .name("test-tenant")
+            if (tenant == null) {
+                tenant = Tenant.builder()
+                        .name(tenantName)
                         .build();
-                testTenant = tenantService.create(testTenant);
-                log.info("Created test tenant with ID: {}", testTenant.getId());
+                tenant = tenantService.create(tenant);
+                log.info("Created tenant '{}' with ID: {}", tenantName, tenant.getId());
             } else {
-                log.info("Test tenant already exists with ID: {}", testTenant.getId());
+                log.info("Tenant '{}' already exists with ID: {}", tenantName, tenant.getId());
             }
         } catch (Exception e) {
-            testTenant = Tenant.builder()
-                    .name("test-tenant")
+            tenant = Tenant.builder()
+                    .name(tenantName)
                     .build();
-            testTenant = tenantService.create(testTenant);
-            log.info("Created test tenant with ID: {}", testTenant.getId());
+            tenant = tenantService.create(tenant);
+            log.info("Created tenant '{}' with ID: {}", tenantName, tenant.getId());
         }
 
-        // Create test user with SUPER_ADMIN role
-        User testUser = User.builder()
-                .username("user-test")
-                .password("user-test")
+        // Create super admin user
+        User superAdmin = User.builder()
+                .username(username)
+                .password(password)
                 .role(User.Role.SUPER_ADMIN)
-                .tenant(testTenant)
+                .tenant(tenant)
                 .build();
 
-        testUser = userService.create(testUser);
-        log.info("Created test user '{}' with SUPER_ADMIN role and ID: {}",
-                testUser.getUsername(), testUser.getId());
+        superAdmin = userService.create(superAdmin);
+        log.info("Created super admin user '{}' with SUPER_ADMIN role and ID: {}",
+                superAdmin.getUsername(), superAdmin.getId());
     }
 }
