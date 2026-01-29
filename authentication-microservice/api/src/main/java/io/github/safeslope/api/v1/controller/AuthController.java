@@ -1,18 +1,20 @@
 package io.github.safeslope.api.v1.controller;
 
 import io.github.safeslope.JwtService;
+import io.github.safeslope.api.v1.dto.AuthMeDto;
 import io.github.safeslope.api.v1.dto.AuthRequestDto;
 
+import io.github.safeslope.entities.Tenant;
 import io.github.safeslope.entities.User;
 import io.github.safeslope.user.service.UserService;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/auth")
@@ -38,5 +40,25 @@ public class AuthController {
             } else {
                 throw new UsernameNotFoundException("Invalid user request!");
             }
+    }
+
+    @GetMapping("/me")
+    @PreAuthorize("hasAnyRole('SUPER_ADMIN', 'ADMIN', 'USER')")
+    public AuthMeDto me(){
+        //extract userid, role and tenantid from the token
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication.isAuthenticated()) {
+            User user = userService.getByUsername(authentication.getName());
+            Tenant tenant = user.getTenant();
+            return new AuthMeDto(user.getUsername(), user.getRole(), tenant.getName());
+        } else {
+            throw new UsernameNotFoundException("Invalid user request!");
+        }
+    }
+
+    @GetMapping("/logout")
+    @PreAuthorize("hasAnyRole('SUPER_ADMIN', 'ADMIN', 'USER')")
+    public ResponseEntity<Void> logout(){
+        return ResponseEntity.noContent().build();
     }
 }
