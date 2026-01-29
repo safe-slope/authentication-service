@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.7.0](https://github.com/safe-slope/authentication-service/compare/authentication-microservice-v1.6.1...authentication-microservice-v1.7.0) (2026-01-29)
+
+
+### Features
+
+* add "me" and "logout" endpoints in AuthController ([ab14404](https://github.com/safe-slope/authentication-service/commit/ab14404f79c73fed8ef5ff8aa71096d0b4a26206))
+
 ## [1.6.1](https://github.com/safe-slope/authentication-service/compare/authentication-microservice-v1.6.0...authentication-microservice-v1.6.1) (2026-01-29)
 
 
