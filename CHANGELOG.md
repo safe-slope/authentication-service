@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.5.1](https://github.com/safe-slope/authentication-service/compare/authentication-microservice-v1.5.0...authentication-microservice-v1.5.1) (2026-01-29)
+
+
+### Bug Fixes
+
+* update workflows to improve release conditions and automate staging deployment ([8301b2f](https://github.com/safe-slope/authentication-service/commit/8301b2ffa7de123d47dcdd56f1e4fd06ecee7f4a))
+
 ## [1.5.0](https://github.com/safe-slope/authentication-service/compare/authentication-microservice-v1.4.2...authentication-microservice-v1.5.0) (2026-01-28)
 
 
