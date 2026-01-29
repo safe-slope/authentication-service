@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.6.0](https://github.com/safe-slope/authentication-service/compare/authentication-microservice-v1.5.1...authentication-microservice-v1.6.0) (2026-01-29)
+
+
+### Features
+
+* configure DataInitializer for all profiles with environment-based credentials ([97f51c3](https://github.com/safe-slope/authentication-service/commit/97f51c3e17de572f18e290feea3545743985662f))
+* configure DataInitializer with environment-based super admin credentials ([e2c76af](https://github.com/safe-slope/authentication-service/commit/e2c76af3f5c065bcd5faffb6dc95ebf8032a1b12))
+
+
+### Code Refactoring
+
+* improve DataInitializer with constructor injection and better error handling ([601c8b6](https://github.com/safe-slope/authentication-service/commit/601c8b66cc65535ba402109193b1c2955ab5dcc2))
+
 ## [1.5.1](https://github.com/safe-slope/authentication-service/compare/authentication-microservice-v1.5.0...authentication-microservice-v1.5.1) (2026-01-29)
 
 
