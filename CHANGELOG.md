@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.6.1](https://github.com/safe-slope/authentication-service/compare/authentication-microservice-v1.6.0...authentication-microservice-v1.6.1) (2026-01-29)
+
+
+### Bug Fixes
+
+* update Hibernate ddl-auto setting to "update" for staging environment ([01a8ed6](https://github.com/safe-slope/authentication-service/commit/01a8ed654f36bccc85cc92a165eb1e99b2decf53))
+
 ## [1.6.0](https://github.com/safe-slope/authentication-service/compare/authentication-microservice-v1.5.1...authentication-microservice-v1.6.0) (2026-01-29)
 
 
