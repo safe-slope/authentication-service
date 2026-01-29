@@ -17,29 +17,29 @@ import java.security.PrivateKey;
 import java.util.Base64;
 
 @Component
-@ConditionalOnProperty(name = "app.data-initializer.enabled", havingValue = "true", matchIfMissing = false)
+@ConditionalOnProperty(name = "app.data-initializer.enabled", havingValue = "true", matchIfMissing = true)
 @Slf4j
 public class DataInitializer implements CommandLineRunner {
 
     private final UserService userService;
     private final TenantService tenantService;
     private final JwtKeyProvider jwtKeyProvider;
-
-    @Value("${app.data-initializer.tenant-name}")
-    private String tenantName;
-
-    @Value("${app.data-initializer.username}")
-    private String username;
-
-    @Value("${app.data-initializer.password}")
-    private String password;
+    private final String tenantName;
+    private final String username;
+    private final String password;
 
     public DataInitializer(UserService userService,
                            TenantService tenantService,
-                           JwtKeyProvider jwtKeyProvider) {
+                           JwtKeyProvider jwtKeyProvider,
+                           @Value("${app.data-initializer.tenant-name}") String tenantName,
+                           @Value("${app.data-initializer.username}") String username,
+                           @Value("${app.data-initializer.password}") String password) {
         this.userService = userService;
         this.tenantService = tenantService;
         this.jwtKeyProvider = jwtKeyProvider;
+        this.tenantName = tenantName;
+        this.username = username;
+        this.password = password;
     }
 
     @Override
@@ -87,6 +87,7 @@ public class DataInitializer implements CommandLineRunner {
                 log.info("Tenant '{}' already exists with ID: {}", tenantName, tenant.getId());
             }
         } catch (Exception e) {
+            log.error("Failed to retrieve tenants, attempting to create new tenant: {}", e.getMessage());
             tenant = Tenant.builder()
                     .name(tenantName)
                     .build();
